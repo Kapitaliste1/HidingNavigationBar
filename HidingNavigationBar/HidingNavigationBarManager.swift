@@ -120,7 +120,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
 		
 		updateContentInsets()
 		
-        NotificationCenter.default.addObserver(self, selector: #selector(HidingNavigationBarManager.applicationWillEnterForeground), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(HidingNavigationBarManager.applicationWillEnterForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
 	}
 	
 	deinit {
@@ -155,7 +155,7 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
 		extensionController.view.addSubview(view)
 		_ = extensionController.expand()
 		
-		extensionController.view.superview?.bringSubview(toFront: extensionController.view)
+        extensionController.view.superview?.bringSubviewToFront(extensionController.view)
 		updateContentInsets()
 	}
 	
@@ -269,8 +269,9 @@ open class HidingNavigationBarManager: NSObject, UIScrollViewDelegate, UIGesture
 			return false
 		}
 		
-		let scrollFrame = UIEdgeInsetsInsetRect(scrollView.bounds, scrollViewContentInset)
-		let scrollableAmount: CGFloat = scrollView.contentSize.height - scrollFrame.height
+		let scrollFrame = UIEdgeInsets(top: scrollView.bounds.height, left: scrollView.bounds.height, bottom: scrollView.bounds.height, right: scrollView.bounds.height)
+//            UIEdgeInsetsInsetRect(scrollView.bounds, scrollViewContentInset)
+		let scrollableAmount: CGFloat = scrollView.contentSize.height - scrollFrame.right
 		let scrollViewIsSuffecientlyLong: Bool = scrollableAmount > navBarController.totalHeight() * 3
 		
 		return isViewControllerVisible() && scrollViewIsSuffecientlyLong && !isUpdatingValues
